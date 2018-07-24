@@ -10,9 +10,10 @@ Aurdino Software:
 
 # STEPS
 
-Connect Aurdino and set the COM Port in Aurdino IDE
+Connect Aurdino and set the COM Port in Aurdino IDE.
+Upload the code 'StandardFirmata'available in the examples of the Arduino IDE.
 See the port of your arduino, and set the line accordingly in 32 with baud rate.
-Put the audio file in this folder and name it "song.mp3"
+Put the audio file in this folder and name it "song.mp3".
 Open the file in Processing IDE and run it.
 
 
