@@ -34,7 +34,8 @@ PImage fai_iconi;
 PGraphics fai_icong;
 String fai_filename;
 void setup() {
-  size(500, 200);
+  
+  size(300, 200);
   Arial = loadFont("data/Arial.vlw");
   bckgrd = loadImage("background.png");
   
@@ -144,4 +145,3 @@ void soundVision() {
     //ellipse(i,height + 10 - fft.getBand(i)*5, 10,10);
   }
 }
-
