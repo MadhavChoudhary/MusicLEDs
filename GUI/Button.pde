@@ -3,7 +3,7 @@ void buttons() {
   loadButton();
   progressBar();
   volumeSlider();
-  frameAndIcon("IgNite", "icon.png");
+  frameAndIcon("MusicLED", "icon.png");
 }
 
 
@@ -18,8 +18,7 @@ void loadButton() {
   } else if (loadFileAlpha>150) {
     loadFileAlpha-=7;
   }
-
-
+  
   stroke(grey, loadFileAlpha);
   fill(blue, loadFileAlpha);
   strokeWeight(4);

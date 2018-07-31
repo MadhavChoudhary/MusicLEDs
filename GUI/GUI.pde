@@ -8,8 +8,8 @@ color black = #0C0A0B;
 PFont Arial;
 PImage bckgrd;
 
-float  songProgress;
-float  volume = 0.5;
+float songProgress;
+float volume = 0.5;
 float volumeSliderX;
 
 int playButtonAlpha = 150;
@@ -28,8 +28,6 @@ Minim minim;
 AudioPlayer player;
 FFT fft;
 
-
-
 PImage fai_iconi;
 PGraphics fai_icong;
 String fai_filename;
@@ -37,9 +35,9 @@ void setup() {
   
   size(300, 200);
   Arial = loadFont("data/Arial.vlw");
-  bckgrd = loadImage("background.png");
+  bckgrd = loadImage("background.jpg");
   
-  volumeSliderX = width-30;
+  volumeSliderX = (4/5)*width;
 
   minim = new Minim(this);
 }

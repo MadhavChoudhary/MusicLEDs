@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>MUSIC PLAYER</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+        <style>  
+            #bg{
+                height: 100vh;
+                width: 100%;
+                position: absolute;
+                overflow: hidden;
+            }
+            #bg img{
+                height: 120vh;
+                width: 105%;
+                -webkit-filter:blur(20px);
+                position: absolute;
+                top:50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                z-index: 1;
+            }          
+            #player{
+                padding: 25px;
+                color:#333;
+            }
+            #songTitle{
+                width:300px;
+                text-align: center;
+                font-family: monospace;
+                font-size: 18px;
+                position: absolute;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
+            #buttons{
+                height: 50px;
+                width: 100%;
+                margin-top: 50px;
+                position:relative;
+                top:10%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
+            #play,#next,#pre{
+                width: 50px;
+                height: 50px;
+                border: 0;
+                background-color:black;
+                border-radius: 50%;
+                outline: none;
+                cursor: pointer;
+                position: absolute;
+                top:60%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
+            #next{
+                width: 30px;
+                height: 30px;
+                left: 70%;
+            }
+            #pre{
+                width: 30px;
+                height: 30px;
+                left: 30%;
+            }
+            #play img,#next img,#pre img{
+                position: absolute;
+                top:50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
+            #seek-bar{
+                width: 250px;
+                height: 5px;
+                background-color:gray;
+                display: flex;
+                border-radius: 50px;
+                margin-left: 25px;
+                cursor: pointer;
+            }
+            #fill{
+                height: 5px;
+                background-color:black;
+                border-radius: 20px;
+            }
+            #handle{
+                width: 8px;
+                height: 8px;
+                background-color:royalblue;
+                border-radius: 50%;
+                margin-left: -5px;
+                transform: scale(2);
+            }</style>
+
+        <table style="background-color: black; width:100%;">
+            <tr>
+                <td>
+                    <table style="width: 48%;">
+                        <img src="Risc Logo.jpg" style="width:400px;height: 150px;">
+                    </table>
+                </td>
+                <td>
+                    <table style=";width: 48%;">
+                        <h1 style="color: white;width: 100px;height: 100px;"><p> MUSIC PLAYER</p></h1>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <div style="position: relative;text-align: center;color: white;">
+            
+                <img src="ardino.jpg" style="width:100% ;webkit-filter:blur(10px) ">
+            
+                <div id="player" style="color: blue;background-color: white;position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%); ">
+                <div id="songTitle">Demo</div>
+                <div id="buttons">
+                    <button id="pre" onclick="pre()"><img src="Pre.png" height="80%" width="80%"/></button>
+                    <button id="play" onclick="playOrPauseSong()"><img src="Pause.png"/></button>
+                    <button id="next" onclick="next()"><img src="Next.png" height="90%" width="90%"/></button>
+                </div>
+
+                <div id="seek-bar">
+                    <div id="fill"></div>
+                    <div id="handle"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </body>
+    <script type="text/javascript">
+        var songs = ["01 Yeh Fitoor Mera - Fitoor (Arijit Singh) 190Kbps.mp3", "DJ_Snake_-_Magenta_Riddim-Vubey.mp3", "Drake_-_God_s_Plan-Vubey.mp3"];
+        var poster = ["350846.jpg", "Poster2.jpg", "Poster3.jpg"];
+        var songTitle = document.getElementById("songTitle");
+        var fillBar = document.getElementById("fill");
+
+        var song = new Audio();
+        var currentSong = 0;    // it point to the current song
+
+        window.onload = playSong;   // it will call the function playSong when window is load
+
+        function playSong() {
+
+            song.src = songs[currentSong];  //set the source of 0th song 
+
+            songTitle.textContent = songs[currentSong]; // set the title of song
+
+            song.play();    // play the song
+        }
+
+        function playOrPauseSong() {
+
+            if (song.paused) {
+                song.play();
+                $("#play img").attr("src", "Pause.png");
+            } else {
+                song.pause();
+                $("#play img").attr("src", "Play.png");
+            }
+        }
+
+        song.addEventListener('timeupdate', function () {
+
+            var position = song.currentTime / song.duration;
+
+            fillBar.style.width = position * 100 + '%';
+        });
+
+
+        function next() {
+
+            currentSong++;
+            if (currentSong > 2) {
+                currentSong = 0;
+            }
+            playSong();
+            $("#play img").attr("src", "Pause.png");
+            $("#image img").attr("src", poster[currentSong]);
+            $("#bg img").attr("src", poster[currentSong]);
+        }
+
+        function pre() {
+
+            currentSong--;
+            if (currentSong < 0) {
+                currentSong = 2;
+            }
+            playSong();
+            $("#play img").attr("src", "Pause.png");
+            $("#image img").attr("src", poster[currentSong]);
+            $("#bg img").attr("src", poster[currentSong]);
+        }
+    </script>
+</html>
