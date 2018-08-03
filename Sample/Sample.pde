@@ -11,6 +11,7 @@ GSlider bar;
 GSlider vol;
 GImageToggleButton play,mute;
 GImageToggleButton songs[];
+GLabel labels[];
 GImageButton prev,next,add;
 Minim minim;
 AudioPlayer song;
@@ -18,10 +19,10 @@ FFT fft;
 AudioMetaData meta;
 
 //Global Variables
-boolean songSet;
+int songSet;
 String [] filepath;
 int length;
-int num_songs=5;
+int num_songs=10;
 int w=1000;
 int h=600;
 int barX=w/8;
@@ -46,6 +47,7 @@ int prevY=playY+5;
 int nextX=playX+50;
 
 int num;
+boolean flag;
 
 void visualfft(){
     stroke(100);
@@ -55,13 +57,41 @@ void visualfft(){
     for(int i = 0; i < 0+fft.specSize(); i++){    
       //drawing 
       line(i+width/4, height-140, i+width/4, height-140-fft.getBand(i)*2);
+      
+      ////processing
+      //if(i%100==0) text(fft.getBand(i), i, height*4/5+20);
+      //if(i==200) {
+      //  if(fft.getBand(i)>2) {
+      //    setColor1(0,255,255);
+      //    setColor3(0,255,255);
+      //  }
+      //  else if(fft.getBand(i)>1) {
+      //    setColor1(255,0,255);
+      //    setColor3(255,0,255);
+      //  } else {
+      //    setColor1(255,255,255);
+      //    setColor3(255,255,255);
+      //  }
+      //}
+      //if(i==50) {
+      //  if(fft.getBand(i)>5) {
+      //    color_id = (color_id+1)%4;
+      //  } else if(fft.getBand(i)>3) {
+      //    if(color_id==0) setColor2(255,255,0);
+      //    else if(color_id==1) setColor2(0,255,0);
+      //    else if(color_id==2) setColor2(255,0,0);
+      //    else setColor2(0,255,255);
+      //  } 
+      //  else {
+      //    setColor2(255,255,255);
+      //  }
+      //} 
     }
 }
 
 void fileSelected(File selection){
   filepath[num] = selection.getAbsolutePath();
-  songs[num]=new GImageToggleButton(this,barX+num*200,height-barY+200*(num)%4,"icons/album.png",2,1);
-  println(filepath[num]);
+  songs[num]=new GImageToggleButton(this,barX+25+num*150-750*floor(num/5),height-barY+150*(num)%4+150*floor(num/5),"icons/album.png",2,1);
   num++;
   
 }
@@ -74,6 +104,7 @@ void setup(){
   String[] files;
   filepath=new String[num_songs];
   songs=new GImageToggleButton[num_songs];
+  labels=new GLabel[num_songs];
   minim=new Minim(this);
   
   bar=new GSlider(this,barX,barY,barWidth,barHeight,barRad);
@@ -99,20 +130,19 @@ void setup(){
   smooth();
   
   bg=loadImage("icons/background4.jpg");
+  songSet=-1;
   
 }
 
 void draw(){
-  
-  if(songSet){
-    fft=new FFT(song.bufferSize(), song.sampleRate());
-    fft.forward(song.mix);
-  }
   background(255);
   image(bg,0,0,width,height);
   bar.setLocalColorScheme(1); //6-blue
   bar.setPrecision(5);
-  if(songSet){
+  
+  if(songSet!=-1){
+    fft=new FFT(song.bufferSize(), song.sampleRate());
+    fft.forward(song.mix);
     bar.setValue(float(song.position())/meta.length());
     //song.setVolume(vol.getValueF());
     visualfft();
@@ -146,18 +176,33 @@ public void handleToggleButtonEvents(GImageToggleButton button, GEvent event) {
     if(button.getState()==1) song.mute();
     else song.unmute();
   }
-  for(int i=0;i<num;i++){
-    if(button==songs[i] && button.getState()==1){
-      if(songSet){
-        button.setState(0);
-      }
-      else{
+  else{
+    flag=false;
+    for(int i=0;i<num;i++){
+      if(button==songs[i] && button.getState()==1){
+        println(i);
+        println(button.getState());
+        if(songSet!=-1 && songSet!=i){
+          play.setState(0);
+          song.close();
+          songs[songSet].setState(0);
+          songSet=-1;
+        }
         song = minim.loadFile(filepath[i]);
-        songSet=true;
+        songSet=i;
+        flag=true;
         meta=song.getMetaData();
         length=meta.length();
+  
+        //println(barX+i*150);
+        labels[i]=new GLabel(this,barX+25+i*150-750*floor(i/5),height+80-barY+150*(i)%4+150*floor(i/5),100,100);
+        labels[i].setText(meta.title()+"\n"+meta.album());
+        break;
       }
-      break;
+    }
+    if(!flag){
+      song.close();
+      songSet=-1;
     }
   }
 }
