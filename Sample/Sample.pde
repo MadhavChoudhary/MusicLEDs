@@ -11,7 +11,7 @@ GSlider bar;
 GSlider vol;
 GImageToggleButton play,mute;
 GImageToggleButton songs[];
-GImageButton prev,next;
+GImageButton prev,next,add;
 Minim minim;
 AudioPlayer song;
 FFT fft;
@@ -19,6 +19,7 @@ AudioMetaData meta;
 
 //Global Variables
 boolean songSet;
+String [] filepath;
 int length;
 int num_songs=5;
 int w=1000;
@@ -26,13 +27,13 @@ int h=600;
 int barX=w/8;
 int barRad=10;
 int barHeight=barRad*3;
-int barY=h-barRad*5;
+int barY=h-barRad*7;
 int barWidth=3*w/4;
 
 int volX=7*w/8;
 int volRad=7;
 int volHeight=volRad*3;
-int volY=3*h/4;
+int volY=3*h/4-10;
 int volWidth=w/8;
   
 int playSize=48;
@@ -44,14 +45,7 @@ int prevX=playX-50;
 int prevY=playY+5;
 int nextX=playX+50;
 
-void makeSongLayout(){
-  
-  minim=new Minim(this);
-  song = minim.loadFile("songs/song.mp3");
-  songSet=true;
-  meta=song.getMetaData();
-  length=meta.length();
-}
+int num;
 
 void visualfft(){
     stroke(100);
@@ -60,21 +54,27 @@ void visualfft(){
     // frequency   
     for(int i = 0; i < 0+fft.specSize(); i++){    
       //drawing 
-      line(i+width/4, height-110, i+width/4, height-110-fft.getBand(i)*2);
+      line(i+width/4, height-140, i+width/4, height-140-fft.getBand(i)*2);
     }
 }
 
 void fileSelected(File selection){
-  String filepath = selection.getAbsolutePath();
-  println(filepath);
+  filepath[num] = selection.getAbsolutePath();
+  songs[num]=new GImageToggleButton(this,barX+num*200,height-barY+200*(num)%4,"icons/album.png",2,1);
+  println(filepath[num]);
+  num++;
+  
 }
 void setup(){
   
   size(1000,600);
   G4P.setCursor(CROSS);
+  num=0;
   
   String[] files;
-  selectInput("Select a file to process:", "fileSelected");
+  filepath=new String[num_songs];
+  songs=new GImageToggleButton[num_songs];
+  minim=new Minim(this);
   
   bar=new GSlider(this,barX,barY,barWidth,barHeight,barRad);
   vol=new GSlider(this,volX,volY,volWidth,volHeight,volRad);
@@ -82,12 +82,6 @@ void setup(){
   
   play=new GImageToggleButton(this,playX,playY,"icons/playpause.png",2,1);
   mute=new GImageToggleButton(this,muteX,muteY,"icons/mute.png",2,1);
-    
-  songs=new GImageToggleButton[num_songs];
-  
-  for(int i=0;i<num_songs;i++){
-    songs[i]=new GImageToggleButton(this,barX+i*100,height-barY,"icons/song"+i+".png",2,1);
-  }
   
   files = new String[] { 
     "icons/prev.png"
@@ -97,20 +91,23 @@ void setup(){
     "icons/next.png"
   };
   next=new GImageButton(this,nextX,prevY,files);
+  files = new String[] { 
+    "icons/add.png"
+  };
+  add=new GImageButton(this,width/16-20,muteY,files);
   
   smooth();
   
   bg=loadImage("icons/background4.jpg");
   
-  makeSongLayout();
-  if(songSet){
-    fft=new FFT(song.bufferSize(), song.sampleRate());
-  }
 }
 
 void draw(){
   
-  fft.forward(song.mix);
+  if(songSet){
+    fft=new FFT(song.bufferSize(), song.sampleRate());
+    fft.forward(song.mix);
+  }
   background(255);
   image(bg,0,0,width,height);
   bar.setLocalColorScheme(1); //6-blue
@@ -123,10 +120,14 @@ void draw(){
 }
 
 void handleButtonEvents(GImageButton button, GEvent event) {
-  if (button == prev)
+  if(button == add){
+    selectInput("Select a file to process:", "fileSelected");
+  }
+  else if (button == prev)
     println("Prev");
   else if (button == next)
-    println("Next");  
+    println("Next");
+    
 }
 
 public void handleSliderEvents(GValueControl slider, GEvent event) { 
@@ -144,6 +145,20 @@ public void handleToggleButtonEvents(GImageToggleButton button, GEvent event) {
   else if(button == mute){
     if(button.getState()==1) song.mute();
     else song.unmute();
+  }
+  for(int i=0;i<num;i++){
+    if(button==songs[i] && button.getState()==1){
+      if(songSet){
+        button.setState(0);
+      }
+      else{
+        song = minim.loadFile(filepath[i]);
+        songSet=true;
+        meta=song.getMetaData();
+        length=meta.length();
+      }
+      break;
+    }
   }
 }
 
