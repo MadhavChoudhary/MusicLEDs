@@ -29,9 +29,9 @@ int common_cathode = 1;
 void setup() {
     size(800, 600);
     
-    //arduino = new Arduino(this, "/dev/cu.usbmodem14201", 57600);
-    //for (int i = 0; i <= 13; i++) arduino.pinMode(i, Arduino.OUTPUT);
-    //for (int i = 0; i <= 13; i++) arduino.digitalWrite(i,arduino.HIGH);
+    arduino = new Arduino(this, "/dev/cu.usbmodem14101", 57600);
+    for (int i = 0; i <= 13; i++) arduino.pinMode(i, Arduino.OUTPUT);
+    for (int i = 0; i <= 13; i++) arduino.digitalWrite(i,arduino.HIGH);
 
     minim = new Minim(this); 
     song = minim.getLineIn();
@@ -54,34 +54,34 @@ void draw() {
       //drawing 
       ellipse(i, 200, 7, fft.getBand(i) *10); 
         
-      ////processing
-      //if(i%100==0) text(fft.getBand(i), i, height*4/5+20);
-      //if(i==200) {
-      //  if(fft.getBand(i)>2) {
-      //    setColor1(0,255,255);
-      //    setColor3(0,255,255);
-      //  }
-      //  else if(fft.getBand(i)>1) {
-      //    setColor1(255,0,255);
-      //    setColor3(255,0,255);
-      //  } else {
-      //    setColor1(255,255,255);
-      //    setColor3(255,255,255);
-      //  }
-      //}
-      //if(i==50) {
-      //  if(fft.getBand(i)>5) {
-      //    color_id = (color_id+1)%4;
-      //  } else if(fft.getBand(i)>3) {
-      //    if(color_id==0) setColor2(255,255,0);
-      //    else if(color_id==1) setColor2(0,255,0);
-      //    else if(color_id==2) setColor2(255,0,0);
-      //    else setColor2(0,255,255);
-      //  } 
-      //  else {
-      //    setColor2(255,255,255);
-      //  }
-      //} 
+      //processing
+      if(i%100==0) text(fft.getBand(i), i, height*4/5+20);
+      if(i==200) {
+        if(fft.getBand(i)>2) {
+          setColor1(0,255,255);
+          setColor3(0,255,255);
+        }
+        else if(fft.getBand(i)>1) {
+          setColor1(255,0,255);
+          setColor3(255,0,255);
+        } else {
+          setColor1(255,255,255);
+          setColor3(255,255,255);
+        }
+      }
+      if(i==50) {
+        if(fft.getBand(i)>5) {
+          color_id = (color_id+1)%4;
+        } else if(fft.getBand(i)>3) {
+          if(color_id==0) setColor2(255,255,0);
+          else if(color_id==1) setColor2(0,255,0);
+          else if(color_id==2) setColor2(255,0,0);
+          else setColor2(0,255,255);
+        } 
+        else {
+          setColor2(255,255,255);
+        }
+      } 
     }  
 }
 
