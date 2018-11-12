@@ -7,11 +7,11 @@ LED lights glow with respect to the Audio File Input (Frequency based)
 
 [Processing](https://processing.org/download/)<br />
 ```
-brew install processing
+brew cask install processing    #sudo apt-get install processing
 ```
 [Arduino](https://www.arduino.cc/en/Main/Software)<br />
 ```
-brew install arduino
+brew cask install arduino       #sudo apt-get install arduino
 ```
 
 ## STEPS
