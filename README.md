@@ -1,14 +1,20 @@
 # MusicLEDs
 LED lights glow with respect to the Audio File Input (Frequency based)
 
-# REQUIREMENTS
+![Music Player](https://raw.githubusercontent.com/RISC-IITBBS/MusicLEDs/master/Data/out.gif)
 
-Processing software: click
-[here](https://processing.org/download/)<br />
-Arduino Software: click
-[here](https://www.arduino.cc/en/Main/Software)<br />
+## REQUIREMENTS
 
-# STEPS
+[Processing](https://processing.org/download/)<br />
+```
+brew install processing
+```
+[Arduino](https://www.arduino.cc/en/Main/Software)<br />
+```
+brew install arduino
+```
+
+## STEPS
 
 Connect Arduino and set the COM Port in Arduino IDE.<br />
 Upload the code 'StandardFirmata'available in the examples of the Arduino IDE.<br />
@@ -17,6 +23,6 @@ Put the audio file in this folder and name it "song.mp3".<br />
 Open the file in Processing IDE and run it.<br />
 
 
-# TO BE DONE
+## TO BE DONE
 
 Make GUI independant of Processing.
